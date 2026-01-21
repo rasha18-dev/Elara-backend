@@ -9,7 +9,10 @@
     "dev": "nodemon src/server.js"
   },
   "dependencies": {
+<<<<<<< HEAD
     "axios": "^1.13.2",
+=======
+>>>>>>> 4c3c48c046335d06bdc0ecb5c5447531e7d950e8
     "bcryptjs": "^3.0.3",
     "cloudinary": "^2.8.0",
     "cors": "^2.8.5",
@@ -18,6 +21,7 @@
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^8.20.4",
     "multer": "^2.0.2",
+<<<<<<< HEAD
     "multer-storage-cloudinary": "^2.2.1",
     "nodemailer": "^7.0.12",
     "react-router-dom": "^7.11.0"
@@ -27,5 +31,11 @@
     "nodemon": "^3.1.4",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.18"
+=======
+    "multer-storage-cloudinary": "^2.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+>>>>>>> 4c3c48c046335d06bdc0ecb5c5447531e7d950e8
   }
 }

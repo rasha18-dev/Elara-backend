@@ -1,5 +1,6 @@
 import User from "../models/userModel.js";
 import jwt from "jsonwebtoken";
+<<<<<<< HEAD
 import bcrypt from "bcryptjs";
 import sendEmail from "../utils/SendEmail.js";
 
@@ -28,12 +29,46 @@ export const registerUser = async (req, res) => {
         name: user.name,
         email: user.email,
       },
+=======
+
+/**
+ * @desc    Register new user
+ * @route   POST /api/users/register
+ * @access  Public
+ */
+export const registerUser = async (req, res) => {
+  try {
+    const { name, email, password, isAdmin } = req.body;
+
+    // Check if user already exists
+    const userExists = await User.findOne({ email });
+    if (userExists) {
+      return res.status(400).json({ message: "User already exists" });
+    }
+
+    // ❌ DO NOT hash password here
+    // ✅ Model will hash automatically
+    const user = await User.create({
+      name,
+      email,
+      password, // plain password
+      isAdmin: isAdmin || false,
+    });
+
+    res.status(201).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+      message: "User registered successfully",
+>>>>>>> 4c3c48c046335d06bdc0ecb5c5447531e7d950e8
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
+<<<<<<< HEAD
 /* ================= LOGIN (PASSWORD) ================= */
 export const loginUser = async (req, res) => {
   try {
@@ -52,17 +87,36 @@ export const loginUser = async (req, res) => {
 
     console.log("USER FOUND:", user);
 
+=======
+/**
+ * @desc    Login user & get token
+ * @route   POST /api/users/login
+ * @access  Public
+ */
+export const loginUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Find user
+    const user = await User.findOne({ email });
+>>>>>>> 4c3c48c046335d06bdc0ecb5c5447531e7d950e8
     if (!user) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
+<<<<<<< HEAD
     const isMatch = await bcrypt.compare(password, user.password);
     console.log("PASSWORD MATCH:", isMatch);
 
+=======
+    // Compare password using model method
+    const isMatch = await user.matchPassword(password);
+>>>>>>> 4c3c48c046335d06bdc0ecb5c5447531e7d950e8
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
+<<<<<<< HEAD
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "30d",
     });
@@ -190,6 +244,9 @@ export const Otpverify = async (req, res) => {
     if (!user)
       return res.status(404).json({ message: "User not found" });
 
+=======
+    // Generate JWT
+>>>>>>> 4c3c48c046335d06bdc0ecb5c5447531e7d950e8
     const token = jwt.sign(
       { id: user._id },
       process.env.JWT_SECRET,
@@ -197,10 +254,21 @@ export const Otpverify = async (req, res) => {
     );
 
     res.json({
+<<<<<<< HEAD
       message: "OTP login successful",
       token,
     });
   } catch (error) {
     res.status(400).json({ message: "OTP expired or invalid" });
+=======
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+      token,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+>>>>>>> 4c3c48c046335d06bdc0ecb5c5447531e7d950e8
   }
 };
