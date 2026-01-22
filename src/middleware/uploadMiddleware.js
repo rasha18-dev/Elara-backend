@@ -1,15 +1,15 @@
-<<<<<<< HEAD
 import multer from "multer";
+import cloudinary from "../config/cloudinary.js";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
 
-const storage = multer.memoryStorage();
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "elara-products",
+    allowed_formats: ["jpg", "jpeg", "png", "webp"],
+  },
+});
+
 const upload = multer({ storage });
 
 export default upload;
-=======
-const multer = require("multer");
-const { storage } = require("../config/cloudinary");
-
-const upload = multer({ storage });
-
-module.exports = upload;
->>>>>>> 4c3c48c046335d06bdc0ecb5c5447531e7d950e8

@@ -1,6 +1,5 @@
 import Product from "../models/productModel.js";
 
-<<<<<<< HEAD
 /* ================= CREATE PRODUCT ================= */
 export const createProduct = async (req, res) => {
   try {
@@ -9,21 +8,14 @@ export const createProduct = async (req, res) => {
     if (!name || !price || !description || !image) {
       return res.status(400).json({ message: "All fields are required" });
     }
-=======
-// CREATE PRODUCT
-export const createProduct = async (req, res) => {
-  try {
-    const { name, price, description, image } = req.body;
->>>>>>> 4c3c48c046335d06bdc0ecb5c5447531e7d950e8
 
     const product = await Product.create({
       name,
       price,
       description,
       image,
-<<<<<<< HEAD
-      category,
-      countInStock,
+      category: category || "All",
+      countInStock: countInStock || 0,
     });
 
     return res.status(201).json(product);
@@ -31,7 +23,6 @@ export const createProduct = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
-
 
 /* ================= GET ALL PRODUCTS (WITH FILTER) ================= */
 export const getProducts = async (req, res) => {
@@ -58,9 +49,9 @@ export const getProductById = async (req, res) => {
       return res.status(404).json({ message: "Product not found" });
     }
 
-    res.json(product);
+    return res.json(product);
   } catch (error) {
-    res.status(500).json({ message: "Product fetch failed" });
+    return res.status(500).json({ message: "Product fetch failed" });
   }
 };
 
@@ -77,13 +68,13 @@ export const updateProduct = async (req, res) => {
     product.description = req.body.description ?? product.description;
     product.countInStock = req.body.countInStock ?? product.countInStock;
 
-    // ✅ MUST ADD THIS
+    // ✅ category update
     product.category = req.body.category ?? product.category;
 
     const updatedProduct = await product.save();
-    res.json(updatedProduct);
+    return res.json(updatedProduct);
   } catch (error) {
-    res.status(500).json({ message: "Update failed", error: error.message });
+    return res.status(500).json({ message: "Update failed", error: error.message });
   }
 };
 
@@ -97,7 +88,6 @@ export const deleteProduct = async (req, res) => {
     }
 
     await product.deleteOne();
-
     return res.json({ message: "Product deleted ✅" });
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -136,7 +126,6 @@ export const createProductReview = async (req, res) => {
     };
 
     product.reviews.push(review);
-
     product.numReviews = product.reviews.length;
 
     product.rating =
@@ -148,32 +137,5 @@ export const createProductReview = async (req, res) => {
     return res.status(201).json({ message: "Review added successfully ✅" });
   } catch (error) {
     return res.status(500).json({ message: error.message });
-=======
-    });
-
-    res.status(201).json(product);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-// GET ALL PRODUCTS
-export const getProducts = async (req, res) => {
-  try {
-    const products = await Product.find();
-    res.json(products);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-// GET PRODUCT BY ID
-export const getProductById = async (req, res) => {
-  try {
-    const product = await Product.findById(req.params.id);
-    res.json(product);
-  } catch (error) {
-    res.status(404).json({ message: "Product not found" });
->>>>>>> 4c3c48c046335d06bdc0ecb5c5447531e7d950e8
   }
 };
