@@ -1,17 +1,32 @@
 import Product from "../models/productModel.js";
+import cloudinary from "cloudinary";
+
 
 /* ================= CREATE PRODUCT ================= */
 export const createProduct = async (req, res) => {
   try {
-    const { name, price, description, image, category, countInStock } = req.body;
+    const {
+      name,
+      price,
+      weight, // ✅ add this
+      description,
+      image,
+      category,
+      countInStock,
+    } = req.body;
 
-    if (!name || !price || !description || !image) {
+    // ✅ include weight in validation
+    if (!name || !price || !weight || !description || !image) {
       return res.status(400).json({ message: "All fields are required" });
     }
+console.log("WEIGHT FROM FRONTEND:", weight);
+
+
 
     const product = await Product.create({
       name,
       price,
+      weight, // ✅ now defined
       description,
       image,
       category: category || "All",
@@ -87,13 +102,32 @@ export const deleteProduct = async (req, res) => {
       return res.status(404).json({ message: "Product not found" });
     }
 
+    if (product.image) {
+      // full url
+      const imageUrl = product.image;
+
+      // remove domain
+      const splitUrl = imageUrl.split("/upload/")[1];
+
+      // remove version
+      const withoutVersion = splitUrl.replace(/^v\d+\//, "");
+
+      // remove extension
+      const publicId = withoutVersion.replace(/\.[^/.]+$/, "");
+
+      console.log("CLOUDINARY PUBLIC ID:", publicId);
+
+      await cloudinary.uploader.destroy(publicId);
+    }
+
     await product.deleteOne();
-    return res.json({ message: "Product deleted ✅" });
+
+    res.json({ message: "Product + image deleted successfully ✅" });
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    console.log("DELETE ERROR:", error);
+    res.status(500).json({ message: error.message });
   }
 };
-
 /* ================= CREATE PRODUCT REVIEW ================= */
 export const createProductReview = async (req, res) => {
   try {

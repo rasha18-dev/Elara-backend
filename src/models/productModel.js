@@ -5,6 +5,10 @@ const productSchema = new mongoose.Schema(
     name: { type: String, required: true, trim: true },
 
     price: { type: Number, required: true },
+     weight: {
+      type: String, // example: "500g", "1kg"
+      required: true,
+    },
 
     description: { type: String, default: "" },
 
@@ -27,5 +31,6 @@ const productSchema = new mongoose.Schema(
 );
 
 // ✅ normal MERN export
-const Product = mongoose.model("Product", productSchema);
-export default Product;
+const product = mongoose.model("product", productSchema);
+
+export default product;

@@ -73,9 +73,9 @@ export const getMyOrders = async (req, res) => {
       return res.status(401).json({ message: "User not authenticated" });
     }
 
-    const orders = await Order.find({ user: req.user._id }).sort({
-      createdAt: -1,
-    });
+   const orders = await Order.find({ user: req.user._id })
+  .populate("orderItems.product")
+  .sort({ createdAt: -1 });
 
     return res.json(orders);
   } catch (error) {
@@ -87,8 +87,10 @@ export const getMyOrders = async (req, res) => {
 export const getAllOrders = async (req, res) => {
   try {
     const orders = await Order.find()
-      .populate("user", "name email")
-      .sort({ createdAt: -1 });
+  .populate("user", "name email")
+  .populate("orderItems.product")
+  .sort({ createdAt: -1 });
+
 
     return res.json(orders);
   } catch (error) {

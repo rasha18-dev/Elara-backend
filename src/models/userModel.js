@@ -16,7 +16,27 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: true },
 
     isAdmin: { type: Boolean, default: false },
-
+        // ✅ ADD THIS CART FIELD
+    cart: [
+      {
+        productId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "product",
+        },
+        qty: {
+          type: Number,
+          default: 1,
+        },
+      },
+    ],
+   
+    favorites: [
+  {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "product"
+  }
+]
+,
     // ✅ OTP reset fields (optional)
     otp: { type: String },
     otpExpire: { type: Date },

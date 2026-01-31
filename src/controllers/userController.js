@@ -107,8 +107,9 @@ export const changePassword = async (req, res) => {
       return res.status(400).json({ message: "Old password is incorrect" });
     }
 
-    // ✅ set new password (model will hash if you have pre-save)
-    user.password = newPassword;
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(newPassword, salt);
+
     await user.save();
 
     return res.status(200).json({ message: "Password changed successfully ✅" });
@@ -146,6 +147,57 @@ export const forgotPassword = async (req, res) => {
       otpToken,
     });
   } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+const generateToken = (id) =>
+  jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "30d" });
+
+export const updateUserProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // update name/email
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
+
+    // ✅ if password change requested
+    if (req.body.newPassword) {
+      if (!req.body.oldPassword) {
+        return res.status(400).json({ message: "Old password required" });
+      }
+
+      const isMatch = await bcrypt.compare(
+        req.body.oldPassword,
+        user.password
+      );
+
+      if (!isMatch) {
+        return res.status(400).json({ message: "Old password incorrect" });
+      }
+
+     user.password = req.body.newPassword;
+
+    }
+
+    const updatedUser = await user.save();
+
+    return res.json({
+      token: generateToken(updatedUser._id),
+      user: {
+        id: updatedUser._id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        isAdmin: updatedUser.isAdmin,
+      },
+    });
+  } catch (error) {
+    console.log("PROFILE UPDATE ERROR:", error);
     return res.status(500).json({ message: error.message });
   }
 };
