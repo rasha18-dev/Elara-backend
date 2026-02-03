@@ -79,3 +79,19 @@ export const removeFromCart = async (req, res) => {
     res.status(500).json({ message: "Remove failed" });
   }
 };
+// CLEAR FULL CART (after checkout / logout)
+export const clearCart = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+
+    user.cart = [];
+
+    await user.save();
+
+    res.json({ message: "Cart cleared" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Clear cart failed" });
+  }
+};
+

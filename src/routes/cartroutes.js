@@ -1,5 +1,5 @@
 import express from "express";
-import { addToCart, getCart, updateCartQty,removeFromCart  } from "../controllers/cartcontroller.js";
+import { addToCart, getCart, updateCartQty,removeFromCart, clearCart,   } from "../controllers/cartcontroller.js";
 import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
@@ -10,4 +10,6 @@ router.get("/", protect, getCart);
 // ✅ ADD THIS
 router.put("/", protect, updateCartQty);
 router.delete("/:id", protect, removeFromCart); 
+router.delete("/", protect, clearCart);
+
 export default router;
