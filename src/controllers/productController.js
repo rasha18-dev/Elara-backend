@@ -82,6 +82,7 @@ export const updateProduct = async (req, res) => {
     product.image = req.body.image ?? product.image;
     product.description = req.body.description ?? product.description;
     product.countInStock = req.body.countInStock ?? product.countInStock;
+   product.weight = req.body.weight || product.weight;
 
     // ✅ category update
     product.category = req.body.category ?? product.category;
