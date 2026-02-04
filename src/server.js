@@ -17,7 +17,7 @@ const app = express();
 // ✅ CORS (Frontend Vite URL)
 app.use(
   cors({
-    origin:["http://localhost:5173", "http://localhost:5174"],
+    origin:["http://localhost:5173", "http://localhost:5174","https://elara-delta.vercel.app"],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
