@@ -9,6 +9,10 @@ import productRoutes from "./routes/productRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
 import cartRoutes from "./routes/cartroutes.js";
 import favoriteroutes from "./routes/favouriteroutes.js";
+import dns from "dns";
+
+dns.setServers(["8.8.8.8", "1.1.1.1"]);
+
 dotenv.config();
 connectDB();
 
@@ -41,3 +45,14 @@ app.get("/", (req, res) => {
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => console.log(`✅ ELARA server running on port ${PORT}`));
+import path from "path";
+
+const __dirname = path.resolve();
+
+// serve frontend build
+app.use(express.static(path.join(__dirname, "frontend/dist")));
+
+// always return index.html for react routes
+app.get("*", (req, res) =>
+  res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"))
+);
